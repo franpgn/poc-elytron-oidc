@@ -5,6 +5,6 @@
         <resource-root path="jboss8-custom-properties-mapped-role-mapper-1.0.0.jar"/>
     </resources>
     <dependencies>
-        <module name="org.wildfly.security.elytron-auth-server"/>
+        <module name="org.wildfly.security.elytron"/>
     </dependencies>
 </module>
