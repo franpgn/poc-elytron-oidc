@@ -2,6 +2,7 @@
     "realm": "poc",
     "auth-server-url": "${env.OIDC_PROVIDER_URL:http://keycloak.poc.svc:8080}",
     "ssl-required": "external",
+    "disable-trust-manager": true,
     "resource": "eap-app",
     "public-client": false,
     "credentials": {

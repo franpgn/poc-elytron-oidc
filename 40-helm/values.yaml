@@ -22,7 +22,7 @@ deploy:
     enabled: true
   env:
     - name: OIDC_PROVIDER_URL
-      value: http://keycloak.poc.svc:8080/realms/poc
+      value: https://keycloak-poc.apps-crc.testing
     - name: OIDC_CLIENT_SECRET
       valueFrom:
         secretKeyRef: { name: oidc-client, key: secret }
