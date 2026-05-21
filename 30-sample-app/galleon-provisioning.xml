@@ -1,5 +1,8 @@
 <?xml version="1.0" ?>
 <installation xmlns="urn:jboss:galleon:provisioning:3.0">
+    <universes>
+        <universe factory="maven"/>
+    </universes>
     <feature-pack location="org.jboss.eap:wildfly-ee-galleon-pack"/>
     <feature-pack location="org.jboss.eap.cloud:eap-cloud-galleon-pack"/>
     <default-configs inherit="false"/>
