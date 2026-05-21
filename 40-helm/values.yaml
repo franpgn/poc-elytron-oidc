@@ -1,0 +1,28 @@
+# values.yaml para o Helm chart jboss-eap/eap8.
+# Apontamos o build para o seu Git contendo a pasta 30-sample-app (ou o
+# que voce definir como contextDir). Veja README -> "Passo 5".
+
+build:
+  uri: https://github.com/YOUR-ORG/poc-elytron-oidc.git
+  ref: main
+  contextDir: 30-sample-app
+  env:
+    # diz ao s2i para processar pasta extensions/ na raiz do contextDir
+    - name: CUSTOM_INSTALL_DIRECTORIES
+      value: extensions
+    # provisiona o EAP a partir do galleon-provisioning.xml
+    - name: GALLEON_PROVISION_FEATURE_PACKS
+      value: org.jboss.eap:wildfly-ee-galleon-pack,org.jboss.eap.cloud:eap-cloud-galleon-pack
+    - name: GALLEON_PROVISION_LAYERS
+      value: cloud-server,elytron,elytron-oidc-client
+
+deploy:
+  replicas: 1
+  route:
+    enabled: true
+  env:
+    - name: OIDC_PROVIDER_URL
+      value: http://keycloak.poc.svc:8080/realms/poc
+    - name: OIDC_CLIENT_SECRET
+      valueFrom:
+        secretKeyRef: { name: oidc-client, key: secret }

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-web>
+    <!-- Aponta o app para o security-domain criado no Elytron via CLI. -->
+    <security-domain>AS-OIDC-ROLEMAPPING-DOMAIN</security-domain>
+</jboss-web>

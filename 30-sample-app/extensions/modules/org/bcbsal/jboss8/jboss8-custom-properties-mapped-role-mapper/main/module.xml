@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="urn:jboss:module:1.9"
+        name="org.bcbsal.jboss8.jboss8-custom-properties-mapped-role-mapper">
+    <resources>
+        <resource-root path="jboss8-custom-properties-mapped-role-mapper-1.0.0.jar"/>
+    </resources>
+    <dependencies>
+        <module name="org.wildfly.security.elytron"/>
+        <module name="java.base"/>
+    </dependencies>
+</module>

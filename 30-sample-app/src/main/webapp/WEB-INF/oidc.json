@@ -1,0 +1,12 @@
+{
+    "realm": "poc",
+    "auth-server-url": "${env.OIDC_PROVIDER_URL:http://keycloak.poc.svc:8080}",
+    "ssl-required": "external",
+    "resource": "eap-app",
+    "public-client": false,
+    "credentials": {
+        "secret": "${env.OIDC_CLIENT_SECRET:change-me}"
+    },
+    "principal-attribute": "preferred_username",
+    "use-resource-role-mappings": false
+}

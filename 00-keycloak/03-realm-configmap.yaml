@@ -1,0 +1,64 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keycloak-realm
+  namespace: poc
+data:
+  poc-realm.json: |
+    {
+      "realm": "poc",
+      "enabled": true,
+      "sslRequired": "external",
+      "roles": {
+        "realm": [
+          { "name": "EXTERNAL_ADMIN" },
+          { "name": "EXTERNAL_USER" }
+        ]
+      },
+      "users": [
+        {
+          "username": "alice",
+          "enabled": true,
+          "email": "alice@example.com",
+          "credentials": [ { "type": "password", "value": "alice", "temporary": false } ],
+          "realmRoles": [ "EXTERNAL_ADMIN" ]
+        },
+        {
+          "username": "bob",
+          "enabled": true,
+          "email": "bob@example.com",
+          "credentials": [ { "type": "password", "value": "bob", "temporary": false } ],
+          "realmRoles": [ "EXTERNAL_USER" ]
+        }
+      ],
+      "clients": [
+        {
+          "clientId": "eap-app",
+          "enabled": true,
+          "protocol": "openid-connect",
+          "publicClient": false,
+          "secret": "eap-app-secret",
+          "standardFlowEnabled": true,
+          "directAccessGrantsEnabled": true,
+          "redirectUris": [ "*" ],
+          "webOrigins":   [ "*" ],
+          "attributes": { "post.logout.redirect.uris": "+" },
+          "protocolMappers": [
+            {
+              "name": "realm roles -> realm_access.roles",
+              "protocol": "openid-connect",
+              "protocolMapper": "oidc-usermodel-realm-role-mapper",
+              "consentRequired": false,
+              "config": {
+                "multivalued": "true",
+                "userinfo.token.claim": "true",
+                "id.token.claim": "true",
+                "access.token.claim": "true",
+                "claim.name": "realm_access.roles",
+                "jsonType.label": "String"
+              }
+            }
+          ]
+        }
+      ]
+    }

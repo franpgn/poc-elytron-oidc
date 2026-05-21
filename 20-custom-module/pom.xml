@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.bcbsal.jboss8</groupId>
+    <artifactId>jboss8-custom-properties-mapped-role-mapper</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <maven.compiler.release>17</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <wildfly-elytron.version>2.6.2.Final</wildfly-elytron.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.wildfly.security</groupId>
+            <artifactId>wildfly-elytron-auth-server</artifactId>
+            <version>${wildfly-elytron.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+</project>
