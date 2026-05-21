@@ -1,39 +1,27 @@
 # =====================================================================
-# Configuracao do Elytron OIDC + role mapper customizado (estilo manual)
-# Rodado pelo S2I via embed-server durante o build
+# Configuracao Elytron OIDC + role mapper customizado (modo manual).
+# Executado pelo jboss-cli.sh em modo offline durante o S2I build,
+# por isso embedamos o server explicitamente.
 # =====================================================================
 
+embed-server --std-out=echo --server-config=standalone.xml
+
 # 1) Custom realm OIDC
-/subsystem=elytron/custom-realm=AS-OIDC-ROLEMAPPING-REALM:add( \
-    module=org.wildfly.security.elytron-http-oidc, \
-    class-name=org.wildfly.security.http.oidc.OidcSecurityRealm)
+/subsystem=elytron/custom-realm=AS-OIDC-ROLEMAPPING-REALM:add(module=org.wildfly.security.elytron-http-oidc, class-name=org.wildfly.security.http.oidc.OidcSecurityRealm)
 
 # 2) Custom role mapper (modulo proprio)
-/subsystem=elytron/custom-role-mapper=CustomPropertiesMappedRoleMapper:add( \
-    module=org.bcbsal.jboss8.jboss8-custom-properties-mapped-role-mapper, \
-    class-name=org.bcbsal.jboss8.custom.rolemapper.CustomPropertiesMappedRoleMapper, \
-    configuration={ \
-        ROLE_PROPERTIES=${jboss.home.dir}/standalone/configuration/rolesMapping-roles.properties \
-    })
+/subsystem=elytron/custom-role-mapper=CustomPropertiesMappedRoleMapper:add(module=org.bcbsal.jboss8.jboss8-custom-properties-mapped-role-mapper, class-name=org.bcbsal.jboss8.custom.rolemapper.CustomPropertiesMappedRoleMapper, configuration={"ROLE_PROPERTIES"="${jboss.home.dir}/standalone/configuration/rolesMapping-roles.properties"})
 
-# 3) Security domain usando o realm OIDC + role mapper
-/subsystem=elytron/security-domain=AS-OIDC-ROLEMAPPING-DOMAIN:add( \
-    default-realm=AS-OIDC-ROLEMAPPING-REALM, \
-    permission-mapper=default-permission-mapper, \
-    role-mapper=CustomPropertiesMappedRoleMapper, \
-    realms=[{realm=AS-OIDC-ROLEMAPPING-REALM}])
+# 3) Security domain usando realm OIDC + role mapper
+/subsystem=elytron/security-domain=AS-OIDC-ROLEMAPPING-DOMAIN:add(default-realm=AS-OIDC-ROLEMAPPING-REALM, permission-mapper=default-permission-mapper, role-mapper=CustomPropertiesMappedRoleMapper, realms=[{realm=AS-OIDC-ROLEMAPPING-REALM}])
 
-# 4) HTTP server mechanism factory (carrega via service-loader do modulo OIDC)
-/subsystem=elytron/service-loader-http-server-mechanism-factory=oidcFactory:add( \
-    module=org.wildfly.security.elytron-http-oidc)
+# 4) HTTP server mechanism factory (service-loader do modulo OIDC)
+/subsystem=elytron/service-loader-http-server-mechanism-factory=oidcFactory:add(module=org.wildfly.security.elytron-http-oidc)
 
 # 5) HTTP authentication factory ligando factory + security domain
-/subsystem=elytron/http-authentication-factory=oidcMechanism:add( \
-    http-server-mechanism-factory=oidcFactory, \
-    security-domain=AS-OIDC-ROLEMAPPING-DOMAIN, \
-    mechanism-configurations=[{mechanism-name=OIDC}])
+/subsystem=elytron/http-authentication-factory=oidcMechanism:add(http-server-mechanism-factory=oidcFactory, security-domain=AS-OIDC-ROLEMAPPING-DOMAIN, mechanism-configurations=[{mechanism-name=OIDC}])
 
 # 6) Mapeamento application-security-domain no Undertow
-/subsystem=undertow/application-security-domain=AS-OIDC-ROLEMAPPING-DOMAIN:add( \
-    http-authentication-factory=oidcMechanism, \
-    override-deployment-config=true)
+/subsystem=undertow/application-security-domain=AS-OIDC-ROLEMAPPING-DOMAIN:add(http-authentication-factory=oidcMechanism, override-deployment-config=true)
+
+stop-embedded-server
