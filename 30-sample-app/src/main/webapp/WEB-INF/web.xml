@@ -29,11 +29,4 @@
     <security-role>
         <role-name>user</role-name>
     </security-role>
-
-    <!-- Caminho onde o listener procura a config OIDC (oidc.json).
-         Empacotamos esse arquivo em WEB-INF/oidc.json. -->
-    <context-param>
-        <param-name>oidc.config.file</param-name>
-        <param-value>WEB-INF/oidc.json</param-value>
-    </context-param>
 </web-app>
